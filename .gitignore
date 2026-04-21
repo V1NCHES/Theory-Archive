@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints
+
+# Models and data
+*.pkl
+*.joblib
+*.h5
+*.pth
+*.onnx
+
+# Local artifacts
+final_model.pkl
+best_logreg_model.pkl
+tree.pkl
