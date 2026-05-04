@@ -1,0 +1,123 @@
+\documentclass[12pt]{article}
+
+% Настройка русского языка и шрифтов
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[T2A]{fontenc}
+
+% Математические пакеты
+\usepackage{amsmath, amssymb, amsfonts}
+
+% Настройка страницы
+\usepackage{geometry}
+\geometry{a4paper, margin=0.8in}
+
+% Другие полезные пакеты
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{docmute} % Игнорирует преамбулы импортируемых файлов
+\usepackage{tocloft} % Для настройки оглавления
+
+% Настройка оглавления
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{10pt}
+
+% Отключаем \maketitle для вложенных документов, чтобы избежать ошибок и дублирования
+\let\oldmaketitle\maketitle
+\renewcommand{\maketitle}{}
+
+% Определение стилей для комментариев
+\definecolor{commentgray}{rgb}{0.4,0.4,0.4}
+\definecolor{antigravityblue}{rgb}{0.0, 0.45, 0.74}
+
+\newcommand{\commentary}[1]{{\small\itshape\color{commentgray} #1}}
+\newcommand{\antigravity}[1]{{\small\color{antigravityblue}\textbf{Antigravity:} #1}}
+
+% Настройка ссылок
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Deep Dive into Machine Learning: Comprehensive Guide},
+}
+
+\begin{document}
+
+% --- Титульный лист ---
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{Deep Dive into Machine Learning}} \\
+    \vspace{1cm}
+    {\Large \textbf{Полный справочник для подготовки к собеседованиях}} \\
+    \vspace{2cm}
+    \includegraphics[width=0.6\textwidth]{gbdt_math.png} \\
+    \vspace{2cm}
+    {\large \textbf{Автор и составитель:}} \\
+    {\large Твой персональный гид Antigravity} \\
+    \vfill
+    {\large \today}
+\end{titlepage}
+
+% --- Введение ---
+\newpage
+\section*{Введение: Твой путь к Mastery}
+\addcontentsline{toc}{section}{Введение}
+
+Этот документ — не просто набор лекций. Это сгусток практического опыта и глубокой теории, структурированный так, чтобы провести тебя от фундаментальных основ до самых мощных алгоритмов современного ML. 
+
+\textbf{Как пользоваться этим справочником:}
+\begin{enumerate}
+    \item \textbf{Фундамент}: Начни с линейных моделей и метрик. Это база, на которой строится всё остальное.
+    \item \textbf{Чистота}: Разделы по кросс-валидации научат тебя не обманывать самого себя при оценке качества.
+    \item \textbf{Алгоритмы}: Переходи к деревьям и бустингу — "тяжелой артиллерии", которая выигрывает соревнования.
+    \item \textbf{Комментарии Antigravity}: Обращай внимание на синие блоки — там собраны инсайты, которые часто спрашивают на собеседованиях.
+\end{enumerate}
+
+\begin{center}
+    \textit{Удачи в обучении! Помни: в ML нет магии, есть только математика и качественные данные.}
+\end{center}
+
+\newpage
+% --- Оглавление ---
+{
+  \hypersetup{linkcolor=black}
+  \tableofcontents
+}
+\newpage
+
+% --- Основное содержание ---
+
+\section{Линейные модели: Фундамент}
+\input{ML_Linear_Models.tex}
+\newpage
+
+\section{Метрики: Как оценивать успех}
+\input{Metrics.tex}
+\newpage
+
+\section{Кросс-валидация: Чистота эксперимента}
+\input{CV_Study.tex}
+\newpage
+
+\section{Метрические методы: k-NN и сходство}
+\input{Metric_Methods.tex}
+\newpage
+
+\section{Подбор гиперпараметров: Искусство настройки}
+\input{HP_Study.tex}
+\newpage
+
+\section{Решающие деревья: Переход к нелинейности}
+\input{Decision_Trees.tex}
+\newpage
+
+\section{Градиентный бустинг: Тяжелая артиллерия}
+\input{GBDT_Study_Material.tex}
+
+\end{document}
