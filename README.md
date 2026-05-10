@@ -6,6 +6,17 @@
 
 ## 📂 Структура репозитория
 
+| Категория | Описание |
+| :--- | :--- |
+| 📘 **[Interview Prep Notes](./Interview%20Prep%20Notes)** | Заметки по Python, ML, MLOps и инструментам. |
+| 🤖 **[ML](./ML)** | Классическое машинное обучение от теории до оптимизации. |
+| 🧠 **[DL](./DL)** | Глубокое обучение: CV, NLP и генеративные модели. |
+| 💼 **[Interview Questions](./Interview%20Questions)** | Сборники реальных вопросов и Handbook Summary. |
+| 📊 **[SQL](./SQL)** | Основы запросов и практические задачи. |
+| 🧩 **[LeetCode](./LeetCode)** | Алгоритмы и структуры данных с примерами решений. |
+
+---
+
 ### 📘 Заметки для подготовки (Interview Prep Notes)
 В папке **[Interview Prep Notes](./Interview%20Prep%20Notes)** находятся комплексные тетради по ключевым направлениям:
 - 📊 **[01 Data Analysis](Interview%20Prep%20Notes/01_Data_Analysis.ipynb)** — Методы разведочного анализа и визуализации.
@@ -42,7 +53,15 @@
 ---
 
 ### 📊 SQL
-В папке **[SQL](./SQL)** находятся материалы по основам SQL и дополнительные задачи для практики.
+В папке **[SQL](./SQL)** находятся материалы по основам SQL и дополнительные задачи для практики. Подробности в локальном [README](./SQL/README.md).
+
+---
+
+### 🧩 LeetCode
+Папка **[LeetCode](./LeetCode)** содержит теорию и решения задач по алгоритмам:
+- **Массивы и Строки:** [01 Arrays](./LeetCode/01_Arrays.ipynb), [02 Strings](./LeetCode/02_Strings.ipynb).
+- **Структуры данных:** [03 HashTables](./LeetCode/03_HashTables.ipynb), [04 Stacks](./LeetCode/04_Stacks.ipynb), [05 Queues](./LeetCode/05_Queues.ipynb), [06 Heaps](./LeetCode/06_Heaps_PriorityQueues.ipynb).
+- **Алгоритмы:** [07 Greedy](./LeetCode/07_Greedy.ipynb), [08 DP](./LeetCode/08_DynamicProgramming.ipynb).
 
 ---
 
@@ -54,3 +73,4 @@
 
 ---
 *Этот архив постоянно обновляется. Все материалы предназначены для образовательных целей.*
+
