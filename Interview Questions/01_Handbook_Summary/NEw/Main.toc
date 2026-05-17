@@ -1,0 +1,158 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Линейные модели}{5}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Типология задач машинного обучения}{5}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Обучение с учителем (Supervised Learning)}{5}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Обучение без учителя (Unsupervised Learning)}{5}{subsubsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.2}Математический аппарат и обозначения}{6}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Обозначения}{6}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Решение МНК (Ordinary Least Squares)}{6}{subsubsection.1.2.2}%
+\contentsline {subsubsection}{\numberline {1.2.3}Численные методы: QR-разложение}{6}{subsubsection.1.2.3}%
+\contentsline {subsubsection}{\numberline {1.2.4}Градиентный спуск (Gradient Descent)}{7}{subsubsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.3}Обработка категориальных признаков}{7}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}One-Hot Encoding (OHE)}{7}{subsubsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.4}Интерпретируемость моделей}{7}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}Линейные модели}{8}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Решающие деревья}{8}{subsubsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.5}Свойства и ограничения линейных моделей}{8}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}Свойства}{8}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Ограничения}{8}{subsubsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.6}Сведение обучения к задаче оптимизации}{9}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}Функция потерь и Функционал качества}{9}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.2}Stochastic Gradient Descent (SGD) и Mini-batches}{9}{subsubsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.7}Регуляризация и борьба с мультиколлинеарностью}{9}{subsection.1.7}%
+\contentsline {subsubsection}{\numberline {1.7.1}Мультиколлинеарность}{9}{subsubsection.1.7.1}%
+\contentsline {subsubsection}{\numberline {1.7.2}L2-регуляризация (Ridge Regression)}{10}{subsubsection.1.7.2}%
+\contentsline {subsubsection}{\numberline {1.7.3}L1-регуляризация (Lasso)}{10}{subsubsection.1.7.3}%
+\contentsline {subsubsection}{\numberline {1.7.4}Сравнительная таблица}{10}{subsubsection.1.7.4}%
+\contentsline {subsection}{\numberline {1.8}Логистическая регрессия}{10}{subsection.1.8}%
+\contentsline {subsubsection}{\numberline {1.8.1}Сигмоида ($\sigma $)}{10}{subsubsection.1.8.1}%
+\contentsline {subsubsection}{\numberline {1.8.2}Метод максимального правдоподобия (MLE)}{11}{subsubsection.1.8.2}%
+\contentsline {subsubsection}{\numberline {1.8.3}Изменения пространства признаков}{11}{subsubsection.1.8.3}%
+\contentsline {subsection}{\numberline {1.9}Функции потерь классификации}{11}{subsection.1.9}%
+\contentsline {subsubsection}{\numberline {1.9.1}Perceptron Loss}{11}{subsubsection.1.9.1}%
+\contentsline {subsubsection}{\numberline {1.9.2}Hinge Loss и SVM}{11}{subsubsection.1.9.2}%
+\contentsline {subsection}{\numberline {1.10}Kernel Trick и ядерные методы}{12}{subsection.1.10}%
+\contentsline {subsubsection}{\numberline {1.10.1}Суть метода}{12}{subsubsection.1.10.1}%
+\contentsline {subsubsection}{\numberline {1.10.2}Виды ядер}{12}{subsubsection.1.10.2}%
+\contentsline {subsubsection}{\numberline {1.10.3}Kernel Density Estimation (KDE)}{12}{subsubsection.1.10.3}%
+\contentsline {subsection}{\numberline {1.11}Многоклассовая классификация}{13}{subsection.1.11}%
+\contentsline {subsubsection}{\numberline {1.11.1}Вероятности и Softmax}{13}{subsubsection.1.11.1}%
+\contentsline {subsubsection}{\numberline {1.11.2}Функция потерь: Cross-Entropy}{13}{subsubsection.1.11.2}%
+\contentsline {subsubsection}{\numberline {1.11.3}Алгоритмы сведения к бинарным задачам}{13}{subsubsection.1.11.3}%
+\contentsline {subsection}{\numberline {1.12}Deep Q\&A: Вопросы и подробные ответы}{14}{subsection.1.12}%
+\contentsline {section}{\numberline {2}Метрики качества моделей}{15}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Типология метрик}{15}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Офлайновые метрики}{15}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Онлайновые метрики}{15}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}Ключевые отличия}{15}{subsubsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.2}Функция потерь vs Метрика качества}{15}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Функция потерь (Loss Function)}{16}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Метрика качества (Metric)}{16}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}В чем ключевые отличия?}{16}{subsubsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.3}Матрица ошибок (Confusion Matrix)}{16}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Основные метрики качества}{17}{subsubsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.4}Кривые и площади: ROC-AUC и PR-AUC}{18}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}ROC-AUC (Receiver Operating Characteristic)}{18}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}PR-AUC (Precision-Recall Curve)}{19}{subsubsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.5}Метрики регрессии}{19}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}MSE (Mean Squared Error)}{19}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}MAE (Mean Absolute Error)}{20}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Относительные метрики: MAPE, SMAPE, WAPE}{20}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}RMSLE (Root Mean Squared Logarithmic Error)}{21}{subsubsection.2.5.4}%
+\contentsline {section}{\numberline {3}Метрические методы обучения}{22}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Алгоритм k-ближайших соседей (k-NN)}{22}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Математическая формулировка}{22}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Классификация и Регрессия}{22}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Выбор параметров}{22}{subsubsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.2}Метрики и функции расстояния}{22}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Взвешенный k-NN}{23}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Веса по рангу (порядковому номеру)}{23}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Веса от расстояния}{23}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Ядерное сглаживание}{23}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Ядерная регрессия (Формула Надарая-Ватсона)}{24}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}Оптимизация поиска ближайшего соседа}{24}{subsubsection.3.3.5}%
+\contentsline {section}{\numberline {4}Решающие Деревья}{25}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Фундаментальные свойства решающих деревьев}{25}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Жадный алгоритм построения}{25}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Критерии ветвления и информативность}{26}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Работа с особенностями данных}{27}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Регуляризация}{27}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Алгоритмические оптимизации (Трюки)}{28}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Подбор гиперпараметров}{29}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Подбор гиперпараметров: определение}{29}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Ключевые гиперпараметры для популярных алгоритмов}{29}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Методология подбора}{30}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Схема Train-Validation-Test}{30}{subsubsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.4}Кросс-валидация (k-Fold)}{31}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Grid Search (Поиск по сетке)}{31}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Random Search (Случайный поиск)}{32}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Продвинутые методы подбора}{32}{subsection.5.7}%
+\contentsline {subsubsection}{\numberline {5.7.1}Байесовская оптимизация}{32}{subsubsection.5.7.1}%
+\contentsline {subsubsection}{\numberline {5.7.2}Алгоритм TPE (Tree-structured Parzen Estimator)}{33}{subsubsection.5.7.2}%
+\contentsline {subsubsection}{\numberline {5.7.3}Population Based Training (PBT)}{33}{subsubsection.5.7.3}%
+\contentsline {subsubsection}{\numberline {5.7.4}Hyperband и Successive Halving}{33}{subsubsection.5.7.4}%
+\contentsline {subsection}{\numberline {5.8}Опенсорс-библиотеки и инструменты}{33}{subsection.5.8}%
+\contentsline {section}{\numberline {6}Кросс-валидация}{36}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Что такое кросс-валидация?}{36}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Метод Hold-out}{36}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Стратификация (Stratification)}{36}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}k-Fold кросс-валидация}{37}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Leave-one-out (LOO)}{37}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Stratified k-Fold}{37}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Кривые обучения (Learning Curves)}{38}{subsection.6.7}%
+\contentsline {subsection}{\numberline {6.8}Как читать графики?}{38}{subsection.6.8}%
+\contentsline {subsection}{\numberline {6.9}Когда стоит заподозрить, что оценка качества завышена?}{38}{subsection.6.9}%
+\contentsline {subsection}{\numberline {6.10}Примеры «подмешивания» тестовых данных (Data Leakage)}{39}{subsection.6.10}%
+\contentsline {section}{\numberline {7}Градиентный бустинг / Ансамбли}{41}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Дилемма смещения и разброса (Bias-Variance Tradeoff)}{41}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Случайный лес (Random Forest)}{42}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Градиентный бустинг (GBDT)}{42}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}Философское отличие: Бустинг vs Бэггинг}{42}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}Математика: Градиентный спуск в функциональном пространстве}{42}{subsubsection.7.3.2}%
+\contentsline {subsubsection}{\numberline {7.3.3}Алгоритм по шагам}{43}{subsubsection.7.3.3}%
+\contentsline {subsubsection}{\numberline {7.3.4}Почему это градиентный спуск?}{43}{subsubsection.7.3.4}%
+\contentsline {subsubsection}{\numberline {7.3.5}Обучение на остатки}{43}{subsubsection.7.3.5}%
+\contentsline {subsubsection}{\numberline {7.3.6}Сходимость}{44}{subsubsection.7.3.6}%
+\contentsline {subsubsection}{\numberline {7.3.7}Ограничение сложности и Регуляризация}{44}{subsubsection.7.3.7}%
+\contentsline {subsubsection}{\numberline {7.3.8}Почему деревья должны быть неглубокими?}{44}{subsubsection.7.3.8}%
+\contentsline {subsection}{\numberline {7.4}Методы борьбы с переобучением (Регуляризация)}{45}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Тройка лидеров: XGBoost, LightGBM, CatBoost}{45}{subsection.7.5}%
+\contentsline {subsubsection}{\numberline {7.5.1}XGBoost (eXtreme Gradient Boosting)}{45}{subsubsection.7.5.1}%
+\contentsline {subsubsection}{\numberline {7.5.2}LightGBM (от Microsoft)}{46}{subsubsection.7.5.2}%
+\contentsline {subsubsection}{\numberline {7.5.3}CatBoost (от Яндекса)}{46}{subsubsection.7.5.3}%
+\contentsline {subsection}{\numberline {7.6}Интерпретация: Feature Importance}{46}{subsection.7.6}%
+\contentsline {section}{\numberline {8}A/B тесты}{48}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Работа с библиотекой Pandas}{49}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}Чтение данных: \texttt {read\_csv}}{49}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2}Индексы и селекция: \texttt {index}, \texttt {loc}, \texttt {iloc}}{50}{subsubsection.8.1.2}%
+\contentsline {subsubsection}{\numberline {8.1.3}Быстрый анализ данных: \texttt {describe} и \texttt {value\_counts}}{50}{subsubsection.8.1.3}%
+\contentsline {subsubsection}{\numberline {8.1.4}Группировка и агрегация: \texttt {groupby} и \texttt {agg}}{51}{subsubsection.8.1.4}%
+\contentsline {subsubsection}{\numberline {8.1.5}Сводные таблицы: \texttt {pivot\_table}}{51}{subsubsection.8.1.5}%
+\contentsline {subsubsection}{\numberline {8.1.6}Работа с пропусками: \texttt {isna} и \texttt {fillna}}{52}{subsubsection.8.1.6}%
+\contentsline {subsection}{\numberline {8.2}Преобразования и масштабирование признаков}{54}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}Z-score (Стандартизованная оценка)}{54}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}StandardScaler}{54}{subsubsection.8.2.2}%
+\contentsline {subsubsection}{\numberline {8.2.3}MinMaxScaler}{55}{subsubsection.8.2.3}%
+\contentsline {subsubsection}{\numberline {8.2.4}Логарифмическое преобразование (Log-transform)}{55}{subsubsection.8.2.4}%
+\contentsline {subsection}{\numberline {8.3}Меры связи и статистические критерии}{56}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}Корреляция: Пирсон, Спирмен, Кендалл}{56}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}Коэффициент линейной корреляции Пирсона ($r$)}{56}{subsubsection.8.3.2}%
+\contentsline {subsubsection}{\numberline {8.3.3}Коэффициент ранговой корреляции Спирмена ($\rho $)}{56}{subsubsection.8.3.3}%
+\contentsline {subsubsection}{\numberline {8.3.4}Коэффициент ранговой корреляции Кендалла ($\tau $)}{56}{subsubsection.8.3.4}%
+\contentsline {subsubsection}{\numberline {8.3.5}Параметрические критерии проверки гипотез}{57}{subsubsection.8.3.5}%
+\contentsline {subsubsection}{\numberline {8.3.6}t-критерий Стьюдента}{57}{subsubsection.8.3.6}%
+\contentsline {subsubsection}{\numberline {8.3.7}Непараметрические критерии проверки гипотез}{58}{subsubsection.8.3.7}%
+\contentsline {subsubsection}{\numberline {8.3.8}Критерий Манна-Уитни (Mann-Whitney U-test)}{58}{subsubsection.8.3.8}%
+\contentsline {subsubsection}{\numberline {8.3.9}Критерий согласия хи-квадрат ($\chi ^2$)}{59}{subsubsection.8.3.9}%
+\contentsline {subsubsection}{\numberline {8.3.10}Критерий Колмогорова-Смирнова (KS-test)}{60}{subsubsection.8.3.10}%
+\contentsline {subsubsection}{\numberline {8.3.11}Дополнительные статистические тесты (Собеседование уровня Senior)}{60}{subsubsection.8.3.11}%
+\contentsline {subsubsection}{\numberline {8.3.12}Проверка нормальности: Критерий Шапиро-Уилка (Shapiro-Wilk)}{60}{subsubsection.8.3.12}%
+\contentsline {subsubsection}{\numberline {8.3.13}Дисперсионный анализ (ANOVA) и Критерий Краскела-Уоллиса}{61}{subsubsection.8.3.13}%
+\contentsline {subsubsection}{\numberline {8.3.14}Связанные выборки: Критерий знаковых рангов Уилкоксона}{61}{subsubsection.8.3.14}%
+\contentsline {subsubsection}{\numberline {8.3.15}Проверка равенства дисперсий: Критерии Бартлетта и Ливеня}{61}{subsubsection.8.3.15}%
+\contentsline {subsubsection}{\numberline {8.3.16}Точный критерий Фишера (Fisher's Exact Test)}{61}{subsubsection.8.3.16}%
+\contentsline {subsection}{\numberline {8.4}Контекст A/B-тестирования, p-value и множественное тестирование}{62}{subsection.8.4}%
+\contentsline {subsubsection}{\numberline {8.4.1}Глубокое понимание p-value}{62}{subsubsection.8.4.1}%
+\contentsline {subsubsection}{\numberline {8.4.2}Ошибки при проверке гипотез и расчет выборки}{62}{subsubsection.8.4.2}%
+\contentsline {subsubsection}{\numberline {8.4.3}Проблема множественного тестирования (Multiple Testing)}{63}{subsubsection.8.4.3}%
+\contentsline {subsection}{\numberline {8.5}Итоговая шпаргалка: Выбор статистического критерия}{65}{subsection.8.5}%

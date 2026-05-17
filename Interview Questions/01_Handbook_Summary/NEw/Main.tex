@@ -1,0 +1,126 @@
+\documentclass[12pt]{article}
+
+% Настройка русского языка и шрифтов
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[T2A]{fontenc}
+
+% Математические пакеты
+\usepackage{amsmath, amssymb, amsfonts}
+
+% Настройка страницы
+\usepackage{geometry}
+\geometry{a4paper, margin=0.8in}
+
+% Другие полезные пакеты
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{docmute} % Позволяет игнорировать преамбулы в подключаемых файлах
+\usepackage{listings}
+
+% Настройка цветов для подсветки кода
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+% Настройка путей к изображениям
+\graphicspath{
+	{../Metric_Methods_LaTeX/},
+	{../Metrics_LaTeX/},
+	{../ML_Linear_Models_LaTeX/},
+	{../Hyperparameters_LaTeX/},
+	{../GBDT_Materials/},
+	{../Decision_Trees_LaTeX/},
+	{../CrossValidation_LaTeX/},
+	{../A B test/}
+}
+
+
+% Определение стилей для комментариев (чтобы не было ошибок, если они используются в подфайлах)
+\definecolor{commentgray}{rgb}{0.4,0.4,0.4}
+\definecolor{antigravityblue}{rgb}{0.0, 0.45, 0.74}
+\definecolor{theorygold}{rgb}{0.85, 0.65, 0.13}
+
+\newcommand{\commentary}[1]{{\small\itshape\color{commentgray} #1}}
+\newcommand{\antigravity}[1]{{\small\color{antigravityblue}\textbf{Antigravity:} #1}}
+
+% Настройка ссылок
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={ML Handbook: Сборник материалов},
+}
+
+\title{ML Handbook: Сборник материалов по теории\\ \large Метрические методы, Метрики качества и Линейные модели}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Линейные модели}
+\input{../ML_Linear_Models_LaTeX/ML_Linear_Models.tex}
+
+
+\newpage
+\section{Метрики качества моделей}
+\input{../Metrics_LaTeX/Metrics.tex}
+
+
+\newpage
+\section{Метрические методы обучения}
+\input{../Metric_Methods_LaTeX/Metric_Methods.tex}
+
+\newpage
+\section{Решающие Деревья}
+\input{../Decision_Trees_LaTeX/Decision_Trees.tex}
+
+\newpage
+\section{Подбор гиперпараметров}
+\input{../Hyperparameters_LaTeX/HP_Study.tex}
+
+\newpage
+\section{Кросс-валидация}
+\input{../CrossValidation_LaTeX/CV_Study.tex}
+
+\newpage
+\section{Градиентный бустинг / Ансамбли}
+\input{../GBDT_Materials/GBDT_Study_Material.tex}
+
+\newpage
+\section{A/B тесты}
+\input{../A B test/AB_Testing_and_Stats.tex}
+
+
+\end{document}

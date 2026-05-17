@@ -42,9 +42,9 @@
 
 \begin{document}
 
-\section{Типология метрик}
+\subsection{Типология метрик}
 
-\subsection{Офлайновые метрики}
+\subsubsection{Офлайновые метрики}
 Офлайновые метрики вычисляются на исторических данных (тестовых выборках) без участия реальных пользователей.
 
 \begin{itemize}
@@ -57,7 +57,7 @@
     \item \textbf{Примеры}: Accuracy, Precision, Recall, ROC-AUC, RMSE, MAE.
 \end{itemize}
 
-\subsection{Онлайновые метрики}
+\subsubsection{Онлайновые метрики}
 Онлайновые метрики измеряются в реальном времени при взаимодействии системы с «живыми» пользователями в ходе A/B-тестирования.
 
 \begin{itemize}
@@ -70,7 +70,7 @@
     \item \textbf{Примеры}: CTR (Click-Through Rate), Конверсия (CR), ARPU (Average Revenue Per User), время сессии, Retention.
 \end{itemize}
 
-\subsection{Ключевые отличия}
+\subsubsection{Ключевые отличия}
 \begin{longtable}{@{}lll@{}}
 \toprule
 \textbf{Характеристика} & \textbf{Офлайн} & \textbf{Онлайн} \\ \midrule
@@ -82,11 +82,11 @@
 
 \commentary{Главная проблема ML в продакшене — отсутствие корреляции между офлайн и онлайн метриками. Модель может идеально предсказывать вероятность клика (высокий ROC-AUC), но показывать плохой CTR из-за того, что предлагаемые товары неинтересны пользователям в данный момент.}
 
-\section{Функция потерь vs Метрика качества}
+\subsection{Функция потерь vs Метрика качества}
 
 Часто новички путают эти понятия, так как в некоторых задачах (например, в регрессии) они могут совпадать (MSE). Однако это концептуально разные вещи.
 
-\subsection{Функция потерь (Loss Function)}
+\subsubsection{Функция потерь (Loss Function)}
 Это математический инструмент для \textbf{обучения} модели.
 \begin{itemize}
     \item \textbf{За что отвечает}: Показывает, насколько сильно модель «ошиблась» на конкретном объекте или выборке.
@@ -95,7 +95,7 @@
     \item \textbf{Примеры}: LogLoss, Cross-Entropy, Huber Loss.
 \end{itemize}
 
-\subsection{Метрика качества (Metric)}
+\subsubsection{Метрика качества (Metric)}
 Это инструмент для \textbf{оценки} модели человеком или бизнесом.
 \begin{itemize}
     \item \textbf{За что отвечает}: Показывает реальное качество работы модели в понятных единицах (проценты, рубли, количество ошибок).
@@ -104,7 +104,7 @@
     \item \textbf{Примеры}: Accuracy, F1-score, ROC-AUC.
 \end{itemize}
 
-\subsection{В чем ключевые отличия?}
+\subsubsection{В чем ключевые отличия?}
 \begin{enumerate}
     \item \textbf{Цель}: Loss — для оптимизатора, Metric — для человека.
     \item \textbf{Гладкость}: Функция потерь должна быть гладкой. Метрика может быть дискретной (например, Accuracy меняется скачками).
@@ -115,7 +115,7 @@
 
 
 
-\section{Матрица ошибок (Confusion Matrix)}
+\subsection{Матрица ошибок (Confusion Matrix)}
 
 Матрица ошибок — это таблица, позволяющая визуализировать производительность алгоритма классификации.
 
@@ -138,7 +138,7 @@
 	\caption{Компромисс между точностью и полнотой.}
 \end{figure}
 
-\subsection{Основные метрики качества}
+\subsubsection{Основные метрики качества}
 
 На основе матрицы ошибок вычисляются базовые метрики:
 
@@ -175,11 +175,11 @@
     \caption{Сравнение ROC и PR кривых.}
 \end{figure}
 
-\section{Кривые и площади: ROC-AUC и PR-AUC}
+\subsection{Кривые и площади: ROC-AUC и PR-AUC}
 
 Эти метрики оценивают качество **ранжирования** объектов моделью, а не просто точность предсказания классов при фиксированном пороге.
 
-\subsection{ROC-AUC (Receiver Operating Characteristic)}
+\subsubsection{ROC-AUC (Receiver Operating Characteristic)}
 Кривая строится в осях:
 \begin{itemize}
     \item \textbf{TPR} (True Positive Rate / Recall): $\frac{TP}{TP + FN}$.
@@ -201,7 +201,7 @@
     \item \textbf{Где подходит}: Задачи с более-менее сбалансированными классами.
 \end{itemize}
 
-\subsection{PR-AUC (Precision-Recall Curve)}
+\subsubsection{PR-AUC (Precision-Recall Curve)}
 Кривая строится в осях:
 \begin{itemize}
     \item \textbf{Recall} (Полнота).
@@ -225,11 +225,11 @@
 \commentary{Главное правило: если классы сбалансированы — смотри на ROC-AUC. Если есть сильный дисбаланс — PR-AUC даст гораздо более честную картину.}
 
 
-\section{Метрики регрессии}
+\subsection{Метрики регрессии}
 
 В задачах регрессии мы предсказываем вещественное число $\widehat{y} \in \mathbb{R}$.
 
-\subsection{MSE (Mean Squared Error)}
+\subsubsection{MSE (Mean Squared Error)}
 Среднеквадратичная ошибка.
 \[ MSE = \frac{1}{n} \sum_{i=1}^n (y_i - \widehat{y}_i)^2 \]
 \begin{itemize}
@@ -237,7 +237,7 @@
     \item \textbf{Минусы}: Неустойчива к выбросам (один выброс может «утянуть» значение метрики), трудно интерпретировать (единицы измерения в квадрате).
 \end{itemize}
 
-\subsection{MAE (Mean Absolute Error)}
+\subsubsection{MAE (Mean Absolute Error)}
 Средняя абсолютная ошибка.
 \[ MAE = \frac{1}{n} \sum_{i=1}^n |y_i - \widehat{y}_i| \]
 \begin{itemize}
@@ -251,7 +251,7 @@
     \caption{Визуализация: MSE (слева) гораздо сильнее реагирует на выбросы, чем MAE (справа).}
 \end{figure}
 
-\subsection{Относительные метрики: MAPE, SMAPE, WAPE}
+\subsubsection{Относительные метрики: MAPE, SMAPE, WAPE}
 Используются, когда нам важна не абсолютная ошибка, а ошибка в процентах от величины таргета.
 
 \begin{itemize}
@@ -268,7 +268,7 @@
     \commentary{Позволяет избежать проблем с околонулевыми значениями отдельных объектов, суммируя ошибки по всей выборке.}
 \end{itemize}
 
-\subsection{RMSLE (Root Mean Squared Logarithmic Error)}
+\subsubsection{RMSLE (Root Mean Squared Logarithmic Error)}
 \[ RMSLE = \sqrt{\frac{1}{n} \sum_{i=1}^n (\log(y_i + 1) - \log(\widehat{y}_i + 1))^2} \]
 \begin{itemize}
     \item \textbf{Зачем}: Когда таргет меняется на порядки (цены на жилье, продажи). Штрафует за относительную ошибку, а не абсолютную.
