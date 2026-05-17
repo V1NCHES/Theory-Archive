@@ -1,0 +1,704 @@
+\documentclass[12pt]{article}
+
+% Настройка русского языка и шрифтов
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage[T2A]{fontenc}
+
+% Математические пакеты
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+
+% Настройка страницы
+\usepackage{geometry}
+\geometry{a4paper, margin=0.8in}
+
+% Другие полезные пакеты
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Настройка цветов для подсветки кода
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Определение стилей для комментариев
+\definecolor{commentgray}{rgb}{0.4,0.4,0.4}
+\definecolor{antigravityblue}{rgb}{0.0, 0.45, 0.74}
+
+\newcommand{\commentary}[1]{{\small\itshape\color{commentgray} #1}}
+\newcommand{\antigravity}[1]{{\small\color{antigravityblue}\textbf{Antigravity:} #1}}
+
+% Настройка ссылок
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Глубокий разбор: A/B тестирование и статистика},
+}
+
+\begin{document}
+
+\title{\textbf{Глубокий разбор: Анализ данных в Pandas, Масштабирование признаков и Математическая статистика для A/B тестирования}}
+\author{Справочник ML-инженера и Data Scientist}
+\date{\today}
+\maketitle
+
+\tableofcontents
+\newpage
+
+\subsection{Работа с библиотекой Pandas}
+
+Библиотека \texttt{pandas} является основным инструментом для манипуляции табличными данными в Python. Эффективная работа с ней требует понимания внутреннего устройства её объектов (Series, DataFrame) и особенностей работы с памятью.
+
+\subsubsection{Чтение данных: \texttt{read\_csv}}
+
+Метод \texttt{pandas.read\_csv} используется для загрузки табличных данных из файлов с разделителями. Основные аргументы, знание которых часто проверяется на собеседованиях:
+\begin{description}
+    \item[\texttt{filepath\_or\_buffer}:] Путь к файлу (локальный или URL) или объект типа buffer (например, \texttt{StringIO}).
+    \item[\texttt{sep} (или \texttt{delimiter}):] Символ-разделитель колонок (по умолчанию \texttt{','}). Для файлов с разделителем-табуляцией используется \texttt{'\textbackslash t'}. Регулярные выражения поддерживаются при использовании параметра \texttt{engine='python'}.
+    \item[\texttt{header}:] Номер строки (0-indexed), используемой в качестве имен колонок. По умолчанию \texttt{header=0}. Если файл не содержит заголовков, передают \texttt{header=None}.
+    \item[\texttt{names}:] Список названий колонок. Используется в паре с \texttt{header=None} или для переопределения существующих заголовков (в сочетании с \texttt{header=0}).
+    \item[\texttt{index\_col}:] Столбец (или список столбцов для мультииндекса), который станет индексом строк.
+    \item[\texttt{usecols}:] Список столбцов для считывания. Оптимизирует расход оперативной памяти, отсекая ненужные данные на этапе загрузки.
+    \item[\texttt{dtype}:] Словарь с типами данных для конкретных колонок (например, \texttt{\{'id': 'int32', 'price': 'float32'\}}). Позволяет избежать автоматического приведения типов и сэкономить память.
+    \item[\texttt{na\_values}:] Список или словарь значений, которые следует распознавать как \texttt{NaN} (например, \texttt{['NA', 'null', '?', '-']}).
+    \item[\texttt{parse\_dates}:] Булев флаг или список столбцов, которые необходимо преобразовать в формат \texttt{datetime64}.
+    \item[\texttt{chunksize}:] Размер чанка (число строк) для итеративного чтения больших файлов. Возвращает объект \texttt{TextFileReader}, позволяющий обрабатывать данные по частям без переполнения RAM.
+\end{description}
+
+\begin{lstlisting}[language=Python, caption={Пример эффективного чтения данных}]
+import pandas as pd
+
+# Read only required columns with explicit types and date parsing
+df = pd.read_csv(
+    "data.csv",
+    sep=";",
+    usecols=["user_id", "timestamp", "revenue"],
+    dtype={"user_id": "int64", "revenue": "float32"},
+    parse_dates=["timestamp"],
+    index_col="user_id"
+)
+\end{lstlisting}
+
+\subsubsection{Индексы и селекция: \texttt{index}, \texttt{loc}, \texttt{iloc}}
+
+Индекс в Pandas (\texttt{Index}) --- это не просто номера строк, а хэш-таблица (или B-дерево), которая обеспечивает быстрый поиск элементов за время $O(1)$. 
+\begin{itemize}
+    \item \textbf{Преимущества:} Быстрое объединение таблиц (\texttt{join}/\texttt{merge}), эффективная фильтрация и выравнивание данных при математических операциях.
+    \item \textbf{Смена индекса:} Метод \texttt{set\_index()} делает колонку индексом, а \texttt{reset\_index()} возвращает индекс обратно в столбцы, создавая стандартный автоинкрементный числовой индекс.
+    \item \textbf{Мультииндекс (MultiIndex):} Иерархический индекс строк или колонок. Позволяет работать с многомерными данными в плоском представлении.
+\end{itemize}
+
+\textbf{Разница между \texttt{.loc} и \texttt{.iloc}:}
+\begin{description}
+    \item[\texttt{.loc}:] Производит выборку элементов исключительно по \textbf{меткам (labels)}. Левая и правая границы среза \textbf{включаются} в выборку (например, \texttt{df.loc['a':'c']} вернет строки с именами 'a', 'b' и 'c').
+    \item[\texttt{.iloc}:] Производит выборку исключительно по \textbf{целочисленным позициям (indices)} (0-indexed). Правая граница среза \textbf{исключается} (например, \texttt{df.iloc[0:3]} вернет строки на позициях 0, 1 и 2).
+\end{description}
+
+\begin{lstlisting}[language=Python, caption={Пример работы с индексами и срезами}]
+# Selection by labels (inclusive of the right bound)
+df_loc = df.loc['user_101':'user_200', 'revenue']
+
+# Selection by positions (first 5 rows, first 2 columns)
+df_iloc = df.iloc[0:5, 0:2]
+\end{lstlisting}
+
+\subsubsection{Быстрый анализ данных: \texttt{describe} и \texttt{value\_counts}}
+
+\begin{description}
+    \item[\texttt{describe()}:] Возвращает описательную статистику. Для числовых признаков: количество (\texttt{count}), среднее (\texttt{mean}), стандартное отклонение (\texttt{std}), минимум, квантили (25\%, 50\%/медиана, 75\%) и максимум.
+    \begin{itemize}
+        \item \textbf{Параметр \texttt{include='all'}:} Позволяет анализировать как числовые, так и категориальные признаки одновременно. Для категориальных колонок выводятся уникальные значения (\texttt{unique}), мода (\texttt{top}) и частота моды (\texttt{freq}).
+        \item \textbf{Ограничения:} Не улавливает нелинейные зависимости, сильно искажается под влиянием выбросов (при расчете \texttt{mean} и \texttt{std}).
+    \end{itemize}
+    \item[\texttt{value\_counts()}:] Возвращает Series, содержащий частоты уникальных значений.
+    \begin{itemize}
+        \item \textbf{Аргументы:} \texttt{normalize=True} (возвращает доли вместо абсолютных значений), \texttt{dropna=False} (учитывает пропуски \texttt{NaN} при подсчете частот), \texttt{bins} (автоматически группирует числовые данные в интервалы, аналог гистограммы).
+    \end{itemize}
+\end{description}
+
+\begin{lstlisting}[language=Python, caption={Применение describe и value\_counts}]
+# Comprehensive analysis including categorical variables
+summary = df.describe(include='all')
+
+# Get proportions of unique categories, including missing values
+category_shares = df['category'].value_counts(normalize=True, dropna=False)
+\end{lstlisting}
+
+\subsubsection{Группировка и агрегация: \texttt{groupby} и \texttt{agg}}
+
+Концепция \textbf{Split-Apply-Combine} лежит в основе \texttt{groupby}:
+\begin{enumerate}
+    \item \textbf{Split:} Разбиение данных на группы по определенным критериям.
+    \item \textbf{Apply:} Применение агрегирующей функции к каждой группе независимо.
+    \item \textbf{Combine:} Объединение результатов в единый DataFrame/Series.
+\end{enumerate}
+
+Метод \texttt{agg()} (или \texttt{aggregate()}) позволяет применять несколько функций агрегации одновременно:
+\begin{lstlisting}[language=Python, caption={Применение groupby и agg}]
+# Use dictionary for columns-specific aggregation
+grouped = df.groupby('group').agg({
+    'revenue': ['sum', 'mean'],
+    'purchase_count': 'max'
+})
+
+# Named Aggregation - prevents multi-index columns creation
+flat_grouped = df.groupby('group').agg(
+    total_rev=pd.NamedAgg(column='revenue', aggfunc='sum'),
+    avg_rev=pd.NamedAgg(column='revenue', aggfunc='mean')
+)
+\end{lstlisting}
+
+\commentary{Важно: использование стандартных строковых агрегаторов ('mean', 'sum') работает значительно быстрее кастомных lambda-функций, так как под капотом Pandas вызывает оптимизированные C-функции (Cython). Передача лямбд заставляет Python делать итерации в цикле на уровне интерпретатора.}
+
+\subsubsection{Сводные таблицы: \texttt{pivot\_table}}
+
+Метод \texttt{pivot\_table} --- это высокоуровневый интерфейс для построения сводных таблиц.
+\begin{itemize}
+    \item \textbf{Основные параметры:}
+    \begin{itemize}
+        \item \texttt{values}: Колонка для агрегирования.
+        \item \texttt{index}: Колонка(и), значения которой станут индексами строк новой таблицы.
+        \item \texttt{columns}: Колонка(и), значения которой станут названиями новых столбцов.
+        \item \texttt{aggfunc}: Функция агрегации (по умолчанию \texttt{'mean'}).
+        \item \texttt{margins}: Булев флаг (по умолчанию \texttt{False}), добавляющий строки и столбцы \texttt{All} с итоговыми значениями агрегации по всей таблице.
+    \end{itemize}
+    \item \textbf{Сравнение с \texttt{groupby}:} Любой \texttt{pivot\_table} может быть выражен через \texttt{groupby} с последующим применением \texttt{unstack()}. Однако \texttt{pivot\_table} предоставляет более читаемый декларативный синтаксис именно для двумерных таблиц.
+    \item \textbf{Сравнение с \texttt{pivot}:} \texttt{pivot} используется исключительно для изменения размерности таблицы без агрегирования (вызовет ошибку \texttt{ValueError}, если для комбинации индекса и колонки найдутся дубликаты). \texttt{pivot\_table} умеет работать с дубликатами за счет наличия \texttt{aggfunc}.
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={Построение сводной таблицы}]
+pivot_df = df.pivot_table(
+    values='revenue',
+    index='user_segment',
+    columns='country',
+    aggfunc='sum',
+    margins=True
+)
+\end{lstlisting}
+
+\subsubsection{Работа с пропусками: \texttt{isna} и \texttt{fillna}}
+
+Пропуски в данных --- неизбежная реальность. В Pandas они обозначаются как \texttt{NaN} (Not a Number) для числовых типов или \texttt{None}/ \texttt{NaT} (Not a Time) для временных.
+
+\begin{description}
+    \item[\texttt{isna()} vs \texttt{isnull()}:] Это \textbf{абсолютные синонимы}. Функция \texttt{isnull()} была добавлена для схожести с синтаксисом языка R, в то время как \texttt{isna()} логически продолжает имя константы \texttt{NaN}.
+\end{description}
+
+\textbf{Стратегии обработки пропусков:}
+\begin{enumerate}
+    \item \textbf{Удаление строк/столбцов (\texttt{dropna()}):}
+    \begin{itemize}
+        \item Параметры: \texttt{axis} (0 для строк, 1 для столбцов), \texttt{how} (\texttt{'any'} --- удалить, если есть хоть один пропуск, \texttt{'all'} --- удалить, только если все значения пропущены), \texttt{thresh} (задает минимальное количество заполненных ячеек для сохранения), \texttt{subset} (список колонок для поиска пропусков).
+        \item \textbf{Опасность:} Может привести к критической потере данных и вызвать \textbf{смещение выборки (selection bias)}, если пропуски распределены не случайно.
+    \end{itemize}
+    \item \textbf{Заполнение константой или логическим сдвигом (\texttt{fillna()}):}
+    \begin{itemize}
+        \item \texttt{method='ffill'} (forward fill): копирует последнее известное значение вперед. Полезно для временных рядов.
+        \item \texttt{method='bfill'} (backward fill): копирует следующее известное значение назад.
+    \end{itemize}
+    \item \textbf{Заполнение статистиками (Mean, Median, Mode):}
+    \begin{itemize}
+        \item \textbf{Критическая опасность (Data Leakage):} Расчет среднего значения по всему датасету до его разбиения на Train/Test выборки приводит к утечке информации из теста в трейн. \textbf{Правильный подход:} рассчитать статистику только на Train, и заполнить ею как Train, так и Test.
+        \item \textbf{Искажение распределения:} Заполнение средним значением искусственно стягивает дисперсию к нулю и искажает истинную форму распределения признака.
+    \end{itemize}
+    \item \textbf{Продвинутое восстановление:} Использование \texttt{KNNImputer} (на основе k-ближайших соседей) или \texttt{IterativeImputer} (MICE --- восстановление на основе цепных уравнений регрессии).
+\end{enumerate}
+
+\begin{lstlisting}[language=Python, caption={Безопасное заполнение пропусков медианой}]
+# Simulating a correct workflow to prevent Data Leakage
+from sklearn.model_selection import train_test_split
+
+train, test = train_test_split(df, test_size=0.2, random_state=42)
+
+# Compute median strictly on the Train set
+train_median = train['age'].median()
+
+# Fill missing values in both sets using the Train median
+train['age'] = train['age'].fillna(train_median)
+test['age'] = test['age'].fillna(train_median)
+\end{lstlisting}
+
+\newpage
+
+\subsection{Преобразования и масштабирование признаков}
+
+Многие алгоритмы машинного обучения чувствительны к масштабу входных данных (линейные модели, метрические алгоритмы, нейронные сети). Без масштабирования признаки с большими абсолютными значениями будут доминировать при обучении.
+
+\subsubsection{Z-score (Стандартизованная оценка)}
+
+Математическое определение Z-score для случайной величины $X$:
+\begin{equation}
+    Z = \frac{X - \mu}{\sigma}
+\end{equation}
+где $\mu$ --- математическое ожидание (среднее значение), а $\sigma$ --- стандартное отклонение генеральной совокупности.
+
+\begin{itemize}
+    \item \textbf{Статистический смысл:} Показывает, на сколько стандартных отклонений наблюдаемое значение отклоняется от среднего. Для нормального распределения $N(0, 1)$ выполняется правило трех сигм: 99.73\% всех значений лежат в интервале $[-3, 3]$.
+    \item \textbf{Детекция выбросов:} Значения с $|Z| > 3$ часто классифицируются как аномалии.
+    \item \textbf{Где НЕЛЬЗЯ использовать Z-score:}
+    \begin{enumerate}
+        \item \textit{Распределения с тяжелыми хвостами или мультимодальные:} Среднее и стандартное отклонение некорректно описывают форму таких данных.
+        \item \textit{Малые выборки:} Оценки выборочного среднего и выборочной дисперсии нестабильны.
+        \item \textit{Наличие экстремальных выбросов (Masking Effect):} Экстремальный выброс смещает среднее значение $\mu$ в свою сторону и сильно раздувает дисперсию $\sigma^2$. В результате сам выброс получает меньшее значение Z-score, а другие умеренные выбросы становятся «незаметными».
+    \end{enumerate}
+\end{itemize}
+
+\textbf{Решение:} Использование \textbf{Modified Z-score} (Модифицированный Z-score), основанный на медиане и медианном абсолютном отклонении (MAD), которые устойчивы (robust) к выбросам:
+\begin{equation}
+    M_i = \frac{0.6745 \cdot (x_i - \tilde{x})}{\text{MAD}}
+\end{equation}
+где $\tilde{x}$ --- медиана выборки, а $\text{MAD}$ определяется как:
+\begin{equation}
+    \text{MAD} = \text{median}(|x_i - \tilde{x}|)
+\end{equation}
+Порог отсечения для модифицированного Z-score обычно устанавливают равным $|M_i| > 3.5$.
+
+\subsubsection{StandardScaler}
+
+\texttt{StandardScaler} из библиотеки \texttt{scikit-learn} реализует Z-преобразование для каждого признака независимо. Он центрирует данные ($\mu = 0$) и масштабирует их до единичной дисперсии ($\sigma = 1$).
+
+\begin{itemize}
+    \item \textbf{Где применять:} Линейная и логистическая регрессия (особенно с регуляризацией Ridge/Lasso), метод опорных векторов (SVM), метод k-ближайших соседей (k-NN), метод главных компонент (PCA).
+    \item \textbf{Где НЕЛЬЗЯ применять:}
+    \begin{itemize}
+        \item \textit{Разреженные матрицы (Sparse matrices):} Вычитание среднего значения $\mu$ превращает нулевые элементы матрицы в ненулевые, что моментально уничтожает свойство разреженности и приводит к переполнению оперативной памяти. \textbf{Решение:} Использовать \texttt{StandardScaler(with\_mean=False)} (масштабирует дисперсию, не сдвигая среднее).
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{MinMaxScaler}
+
+Формула масштабирования \texttt{MinMaxScaler}:
+\begin{equation}
+    x_{new} = \frac{x - x_{min}}{x_{max} - x_{min}} \cdot (max\_val - min\_val) + min\_val
+\end{equation}
+По умолчанию преобразует данные в диапазон $[0, 1]$.
+
+\begin{itemize}
+    \item \textbf{Где применять:} 
+    \begin{itemize}
+        \item Нейронные сети (особенно на входах с функциями активации Sigmoid или Tanh).
+        \item Обработка изображений (масштабирование пикселей из диапазона $0-255$ в диапазон $0-1$).
+        \item Алгоритмы, где необходимо строго сохранить разреженность данных (нули остаются нулями).
+    \end{itemize}
+    \item \textbf{Где НЕЛЬЗЯ применять:}
+    \begin{itemize}
+        \item \textit{Наличие сильных выбросов:} Если в выборке есть одно гигантское значение $x_{max}$, все «здоровые» значения сожмутся в узкий отрезок вблизи нуля (например, $[0, 0.001]$). Это практически уничтожает полезную информацию в данном признаке.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Логарифмическое преобразование (Log-transform)}
+
+Применяется в виде функций $y = \log(x)$ или $y = \log(x + 1)$ (известно как \texttt{log1p} для предотвращения неопределенности $\log(0)$).
+
+\begin{itemize}
+    \item \textbf{Эффекты преобразования:}
+    \begin{enumerate}
+        \item \textit{Сжатие масштаба:} Устраняет правостороннюю асимметрию распределения (длинные «хвосты» больших значений).
+        \item \textit{Стабилизация дисперсии:} Борется с гетероскедастичностью (когда дисперсия ошибки зависит от значений признаков).
+        \item \textit{Линеаризация:} Превращает мультипликативные связи признаков в аддитивные ($\log(a \cdot b) = \log(a) + \log(b)$).
+    \end{enumerate}
+    \item \textbf{Где применять:} Финансовые признаки (доходы, цены квартир), счетчики (количество кликов, просмотров), физические величины с экспоненциальным ростом.
+    \item \textbf{Где НЕЛЬЗЯ применять:}
+    \begin{itemize}
+        \item Отрицательные значения (логарифм не определен).
+        \item Распределения с левосторонней асимметрией (логарифмирование сделает хвост распределения еще более вытянутым влево).
+    \end{itemize}
+\end{itemize}
+
+\newpage
+
+\subsection{Меры связи и статистические критерии}
+
+В данном разделе подробно рассмотрены математические методы оценки взаимосвязи между переменными и проверки статистических гипотез, критически важные для проектирования и анализа результатов A/B-тестирования.
+
+\subsubsection{Корреляция: Пирсон, Спирмен, Кендалл}
+
+Корреляция измеряет силу и направление связи между двумя переменными.
+
+\subsubsection{Коэффициент линейной корреляции Пирсона ($r$)}
+Формула выборочного коэффициента корреляции Пирсона:
+\begin{equation}
+    r_{xy} = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i=1}^n (x_i - \bar{x})^2 \sum_{i=1}^n (y_i - \bar{y})^2}}
+\end{equation}
+\begin{itemize}
+    \item \textbf{Предпосылки:} Обе переменные непрерывны, распределены нормально, связь между ними \textbf{линейна}, отсутствуют значимые выбросы.
+    \item \textbf{Где НЕЛЬЗЯ использовать:}
+    \begin{itemize}
+        \item \textit{Нелинейная связь:} Для параболической зависимости $y = x^2$ на симметричном интервале $[-a, a]$ коэффициент Пирсона будет $r \approx 0$, хотя существует строгая функциональная связь.
+        \item \textit{Наличие выбросов:} Один экстремальный выброс может искусственно завысить или обнулить значение корреляции Пирсона.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Коэффициент ранговой корреляции Спирмена ($\rho$)}
+Коэффициент Спирмена --- это коэффициент Пирсона, рассчитанный не для самих значений, а для их \textbf{рангов} (порядковых номеров в отсортированном ряду):
+\begin{equation}
+    \rho = 1 - \frac{6 \sum d_i^2}{n(n^2 - 1)}
+\end{equation}
+где $d_i = \operatorname{rank}(x_i) - \operatorname{rank}(y_i)$ --- разность рангов сопряженных наблюдений.
+\begin{itemize}
+    \item \textbf{Преимущества:} Нечувствителен к выбросам, не требует нормальности распределения, улавливает \textbf{любую монотонную зависимость} (даже нелинейную).
+    \item \textbf{Где применять:} Ранжирование, работа с порядковыми признаками, скошенные распределения.
+\end{itemize}
+
+\subsubsection{Коэффициент ранговой корреляции Кендалла ($\tau$)}
+Основан на подсчете конкордантных (согласованных) и дискордантных (несогласованных) пар наблюдений:
+\begin{equation}
+    \tau = \frac{C - D}{\frac{1}{2} n (n-1)}
+\end{equation}
+где $C$ --- количество согласованных пар (для которых направления изменения обеих переменных совпадают), $D$ --- количество несогласованных пар.
+\begin{itemize}
+    \item \textbf{Свойства:} Более консервативен, чем коэффициент Спирмена. Считается более надежным на выборках малого объема с большим количеством одинаковых рангов (связей).
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={Расчет корреляции в scipy.stats}]
+import numpy as np
+from scipy import stats
+
+x = np.array([1, 2, 3, 4, 100]) # Outlier at the end
+y = np.array([2, 4, 6, 8, 10])
+
+pearson_r, p_val_p = stats.pearsonr(x, y)   # Strongly affected by the outlier
+spearman_rho, p_val_s = stats.spearmanr(x, y) # Robust to outliers (uses ranks)
+kendall_tau, p_val_k = stats.kendalltau(x, y)
+\end{lstlisting}
+
+\subsubsection{Параметрические критерии проверки гипотез}
+
+Параметрические критерии опираются на предположения о законе распределения данных в генеральной совокупности (чаще всего нормальном) и оперируют параметрами распределения (среднее, дисперсия).
+
+\subsubsection{t-критерий Стьюдента}
+Применяется для проверки гипотез о равенстве средних значений.
+
+\begin{enumerate}
+    \item \textbf{Одновыборочный (One-sample t-test):} Сравнение среднего значения выборки с известной константой $\mu_0$.
+    \begin{equation}
+        t = \frac{\bar{X} - \mu_0}{s / \sqrt{n}}
+    \end{equation}
+    где $s$ --- выборочное стандартное отклонение, $n$ --- размер выборки.
+    
+    \item \textbf{Двухвыборочный для независимых выборок (Independent two-sample t-test):} Сравнение средних значений двух независимых групп.
+    \begin{equation}
+        t = \frac{\bar{X}_1 - \bar{X}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+    \end{equation}
+    \textit{Примечание:} Данная формула соответствует \textbf{t-критерию Уэлча (Welch's t-test)}, который используется по умолчанию при неравенстве дисперсий в группах ($\sigma_1^2 \neq \sigma_2^2$). Классический t-критерий Стьюдента предполагает равенство дисперсий и использует объединенную оценку дисперсии $s_p^2$.
+    
+    \item \textbf{Парный (Paired t-test):} Сравнение средних значений одной группы в разные моменты времени (например, до и после воздействия). Эквивалентен одновыборочному t-тесту, примененному к разностям $d_i = x_{i, \text{after}} - x_{i, \text{before}}$.
+\end{enumerate}
+
+\textbf{Предпосылки t-критерия:}
+\begin{enumerate}
+    \item \textit{Нормальность распределения:} Распределение признака в генеральной совокупности должно быть нормальным. 
+    \begin{itemize}
+        \item \textit{Важное примечание для собеседований (ЦПТ):} Благодаря Центральной Предельной Теореме (ЦПТ), при объемах выборок $n_1, n_2 > 30$ распределение \textbf{выборочного среднего} стремится к нормальному, даже если сами исходные данные распределены ненормально. Следовательно, на больших выборках t-критерий устойчив к отклонениям от нормальности исходных данных.
+    \end{itemize}
+    \item \textit{Независимость:} Наблюдения внутри выборок и между ними независимы.
+    \item \textit{Гомоскедастичность (для классического t-теста):} Равенство дисперсий в сравниваемых группах. Если дисперсии не равны, обязательно используется t-критерий Уэлча (\texttt{equal\_var=False}).
+\end{enumerate}
+
+\textbf{Где НЕЛЬЗЯ использовать t-критерий:}
+\begin{itemize}
+    \item Малые выборки ($n < 30$) со значительным отклонением от нормальности (сильная асимметрия, бимодальность).
+    \item Наличие тяжелых выбросов (они смещают среднее и раздувают дисперсию знаменателя, снижая мощность критерия).
+    \item Качественные или порядковые данные.
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={Применение t-критериев в scipy.stats}]
+# Two-sample Welch's t-test (unequal variances)
+t_stat, p_val = stats.ttest_ind(group_a, group_b, equal_var=False)
+
+# Paired t-test
+t_stat_paired, p_val_paired = stats.ttest_rel(before_treatment, after_treatment)
+\end{lstlisting}
+
+\subsubsection{Непараметрические критерии проверки гипотез}
+
+Непараметрические критерии не накладывают жестких требований на форму распределения данных и оперируют рангами.
+
+\subsubsection{Критерий Манна-Уитни (Mann-Whitney U-test)}
+Непараметрическая альтернатива двухвыборочному t-критерию для независимых выборок.
+\begin{itemize}
+    \item \textbf{Принцип действия:} Все наблюдения из обеих групп объединяются в один общий ряд и ранжируются. Затем вычисляется сумма рангов для каждой группы. Если одна из групп содержит преимущественно большие ранги, это свидетельствует о статистическом различии распределений.
+    \item \textbf{Нулевая гипотеза ($H_0$):} Распределения двух генеральных совокупностей идентичны. Вероятность того, что случайно выбранное значение из первой выборки $X$ превосходит случайно выбранное значение из второй выборки $Y$, равна 50\%: $P(X > Y) = 0.5$.
+    \item \textbf{Предпосылки:} Независимость наблюдений, шкала измерения --- порядковая или метрическая непрерывная.
+    \item \textbf{Главная ловушка для кандидатов на собеседованиях:}
+    \begin{itemize}
+        \item \textbf{Миф:} «Критерий Манна-Уитни сравнивает медианы».
+        \item \textbf{Реальность:} Критерий Манна-Уитни проверяет \textbf{стохастическое доминирование} одной группы над другой. Он эквивалентен сравнению медиан \textbf{только в том случае}, если формы распределений в обеих группах абсолютно идентичны (имеют одинаковый масштаб и форму, отличаясь только сдвигом). Если формы распределений различаются (например, у группы A длинный хвост, а у группы B распределение симметрично), критерий Манна-Уитни может показать значимые различия даже при строго одинаковых медианах.
+    \end{itemize}
+    \item \textbf{Где НЕЛЬЗЯ использовать:} Связанные (зависимые) выборки.
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={Критерий Манна-Уитни}]
+# Two-sided Mann-Whitney U test
+u_stat, p_val_mw = stats.mannwhitneyu(group_a, group_b, alternative='two-sided')
+\end{lstlisting}
+
+\subsubsection{Критерий согласия хи-квадрат ($\chi^2$)}
+Используется для анализа качественных (категориальных) данных. Существует два основных варианта применения:
+\begin{enumerate}
+    \item \textbf{Критерий согласия (Goodness-of-Fit test):} Проверяет, соответствует ли наблюдаемое эмпирическое распределение категориального признака ожидаемому теоретическому распределению.
+    \item \textbf{Критерий независимости (Test of Independence):} Проверяет наличие взаимосвязи между двумя категориальными переменными на основе таблицы сопряженности (contingency table).
+\end{enumerate}
+
+Формула тест-статистики $\chi^2$:
+\begin{equation}
+    \chi^2 = \sum_{i=1}^k \frac{(O_i - E_i)^2}{E_i}
+\end{equation}
+где $O_i$ --- наблюдаемая частота (Observed), $E_i$ --- ожидаемая частота при справедливости нулевой гипотезы (Expected).
+
+\textbf{Предпосылки критерия $\chi^2$:}
+\begin{enumerate}
+    \item \textit{Независимость наблюдений:} Каждый объект классифицируется строго в одну категорию.
+    \item \textit{Достаточный объем выборки:} Ожидаемые частоты в \textbf{каждой} ячейке таблицы сопряженности должны быть не менее 5 ($E_i \ge 5$).
+\end{enumerate}
+
+\textbf{Где НЕЛЬЗЯ использовать критерий $\chi^2$:}
+\begin{itemize}
+    \item Малые выборки, где ожидаемое количество наблюдений хотя бы в одной ячейке таблицы сопряженности меньше 5.
+    \begin{itemize}
+        \item \textbf{Решение:} Использовать \textbf{Точный критерий Фишера} (для таблиц $2 \times 2$) или объединять редкие категории.
+    \end{itemize}
+    \item Зависимые выборки (например, структура предпочтений одних и тех же пользователей до и после рекламы).
+    \begin{itemize}
+        \item \textbf{Решение:} Применять \textbf{Критерий МакНемара (McNemar's test)}.
+    \end{itemize}
+\end{itemize}
+
+\begin{lstlisting}[language=Python, caption={Критерий независимости хи-квадрат}]
+# Contingency table: [[A_converted, A_not_converted], [B_converted, B_not_converted]]
+table = [[120, 880], [165, 835]]
+chi2, p_val, dof, expected = stats.chi2_contingency(table)
+\end{lstlisting}
+
+\subsubsection{Критерий Колмогорова-Смирнова (KS-test)}
+Универсальный непараметрический метод проверки гипотез о равенстве законов распределения.
+
+\begin{enumerate}
+    \item \textbf{Одновыборочный критерий (One-sample KS-test):} Сравнивает эмпирическую функцию распределения выборки $F_n(x)$ с известной непрерывной теоретической функцией распределения $F_0(x)$ (например, нормальной).
+    \item \textbf{Двухвыборочный критерий (Two-sample KS-test):} Сравнивает эмпирические функции распределения двух независимых выборок $F_{1, n}(x)$ и $F_{2, m}(x)$.
+\end{enumerate}
+
+Статистика критерия $D$ представляет собой максимальное вертикальное расстояние между двумя функциями распределения:
+\begin{equation}
+    D = \sup_x |F_1(x) - F_2(x)|
+\end{equation}
+
+\textbf{Предпосылки и ограничения:}
+\begin{enumerate}
+    \item \textit{Непрерывность переменной:} Критерий разработан строго для \textbf{непрерывных} случайных величин. При использовании на дискретных данных (например, рейтинги в звездах 1--5) критерий становится слишком консервативным (p-value искусственно завышается, увеличивая вероятность ошибки II рода).
+    \item \textit{Параметры распределения должны быть фиксированы заранее:} В одновыборочном тесте нельзя оценивать параметры теоретического распределения по исследуемой выборке. Например, если вы хотите проверить выборку на нормальность и рассчитываете среднее $\bar{x}$ и стандартное отклонение $s$ по этим же данным, стандартный критерий Колмогорова-Смирнова использовать \textbf{нельзя} --- он завысит p-value.
+    \begin{itemize}
+        \item \textbf{Решение:} Использовать специализированный \textbf{Критерий Лиллиефорса (Lilliefors test)}.
+    \end{itemize}
+\end{enumerate}
+
+\begin{lstlisting}[language=Python, caption={Двухвыборочный критерий Колмогорова-Смирнова}]
+# Comparing probability distributions of two user groups
+d_stat, p_val_ks = stats.ks_2samp(group_a, group_b)
+\end{lstlisting}
+
+\subsubsection{Дополнительные статистические тесты (Собеседование уровня Senior)}
+
+\subsubsection{Проверка нормальности: Критерий Шапиро-Уилка (Shapiro-Wilk)}
+Самый мощный критерий для проверки гипотезы о нормальности распределения на малых и средних выборках ($n < 5000$).
+\begin{itemize}
+    \item \textbf{Код на Python:} \texttt{stats.shapiro(data)}.
+    \item \textbf{Подводный камень:} На сверхбольших выборках ($n > 100\,000$) критерий становится «слишком» чувствительным к микроскопическим отклонениям от нормальности, которые не имеют практического значения для ЦПТ. На больших данных лучше визуально оценивать нормальность через Q-Q Plot.
+\end{itemize}
+
+\subsubsection{Дисперсионный анализ (ANOVA) и Критерий Краскела-Уоллиса}
+\begin{itemize}
+    \item \textbf{ANOVA (F-test):} Параметрический метод сравнения средних значений для трех и более независимых групп.
+    \begin{itemize}
+        \item \textit{Код на Python:} \texttt{stats.f\_oneway(group1, group2, group3)}.
+        \item \textit{Предпосылки:} Нормальность данных во всех группах, равенство дисперсий в группах.
+    \end{itemize}
+    \item \textbf{Критерий Краскела-Уоллиса (Kruskal-Wallis):} Непараметрический аналог ANOVA.
+    \begin{itemize}
+        \item \textit{Код на Python:} \texttt{stats.kruskal(group1, group2, group3)}.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Связанные выборки: Критерий знаковых рангов Уилкоксона}
+Непараметрический аналог парного t-критерия Стьюдента. Используется для сравнения двух зависимых выборок.
+\begin{itemize}
+    \item \textbf{Код на Python:} \texttt{stats.wilcoxon(before, after)}.
+\end{itemize}
+
+\subsubsection{Проверка равенства дисперсий: Критерии Бартлетта и Ливеня}
+Крайне важны для проверки предпосылки о гомоскедастичности перед запуском t-теста или ANOVA.
+\begin{itemize}
+    \item \textbf{Критерий Бартлетта (Bartlett's test):} Имеет высокую мощность, но \textbf{крайне чувствителен} к отклонению данных от нормальности. Если распределение ненормально, критерий Бартлетта выдаст ложноположительный результат (отклонит равенство дисперсий).
+    \begin{itemize}
+        \item \textit{Код на Python:} \texttt{stats.bartlett(group\_a, group\_b)}.
+    \end{itemize}
+    \item \textbf{Критерий Ливеня (Levene's test):} Устойчив к отклонениям от нормальности (robust). Рекомендуется использовать по умолчанию в реальных задачах.
+    \begin{itemize}
+        \item \textit{Код на Python:} \texttt{stats.levene(group\_a, group\_b, center='median')}.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Точный критерий Фишера (Fisher's Exact Test)}
+Используется вместо критерия $\chi^2$ для анализа таблиц сопряженности $2 \times 2$, когда объем данных мал (ожидаемая частота хотя бы в одной ячейке $< 5$). Вычисляет точную гипергеометрическую вероятность наблюдаемого распределения частот.
+\begin{itemize}
+    \item \textbf{Код на Python:} \texttt{odds\_ratio, p\_val = stats.fisher\_exact(table)}.
+\end{itemize}
+
+\newpage
+
+\subsection{Контекст A/B-тестирования, p-value и множественное тестирование}
+
+A/B-тестирование --- это практическое применение математической статистики в бизнесе для принятия продуктовых решений на основе данных.
+
+\subsubsection{Глубокое понимание p-value}
+
+\textbf{Строгое математическое определение:}
+\texttt{p-value} --- это вероятность получить наблюдаемое значение тест-статистики (или еще более экстремальное в сторону альтернативной гипотезы) при условии, что нулевая гипотеза $H_0$ верна:
+\begin{equation}
+    p\text{-value} = P(T(X) \ge T(x_{obs}) \mid H_0)
+\end{equation}
+
+\textbf{Четыре главных заблуждения, на которых «валят» кандидатов на интервью:}
+\begin{enumerate}
+    \item \textbf{Заблуждение:} «p-value --- это вероятность того, что нулевая гипотеза верна».
+    \begin{itemize}
+        \item \textbf{Истина:} В частотной (часто классической) статистике гипотеза не является случайной величиной --- она либо истинна, либо ложна. Поэтому вероятность $P(H_0)$ не определена. p-value --- это условная вероятность $P(\text{данные} \mid H_0)$, а не апостериорная вероятность $P(H_0 \mid \text{данные})$.
+    \end{itemize}
+    \item \textbf{Заблуждение:} «p-value --- это вероятность ошибки I рода ($\alpha$)».
+    \begin{itemize}
+        \item \textbf{Истина:} Уровень значимости $\alpha$ --- это фиксированный порог принятия решений, который устанавливается \textbf{до} начала эксперимента. p-value --- это случайная величина, вычисляемая \textbf{после} проведения теста на конкретных данных. Ошибка I рода возникает только в том случае, если мы отклоняем $H_0$, когда она верна, и вероятность этого ограничена уровнем $\alpha$.
+    \end{itemize}
+    \item \textbf{Заблуждение:} «Маленький p-value указывает на большую величину продуктового эффекта».
+    \begin{itemize}
+        \item \textbf{Истина:} p-value зависит от двух факторов: величины реального эффекта и \textbf{размера выборки}. На огромных объемах данных (большой трафик) даже микроскопический и абсолютно бесполезный для бизнеса эффект (например, рост конверсии на $0.0001\%$) будет иметь $p\text{-value} < 0.05$. Для оценки практической значимости необходимо рассчитывать точечную оценку эффекта и его доверительный интервал.
+    \end{itemize}
+    \item \textbf{Заблуждение:} «Если $p\text{-value} > \alpha$, нулевая гипотеза доказана как верная».
+    \begin{itemize}
+        \item \textbf{Истина:} Отсутствие доказательств эффекта не является доказательством его отсутствия. Возможно, эксперимент просто не обладал достаточной мощностью (маленькая выборка) для обнаружения реального эффекта. Мы пишем: «Нет достаточных оснований для отклонения нулевой гипотезы».
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Ошибки при проверке гипотез и расчет выборки}
+
+При проверке гипотез возможны два типа ошибок:
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ccc@{}}
+\toprule
+\textbf{Решение / Реальность} & \textbf{$H_0$ истинна} & \textbf{$H_0$ ложна ($H_a$ верна)} \\ \midrule
+\textbf{Сохранить $H_0$} & Корректно ($1 - \alpha$) & Ошибка II рода ($\beta$) \\
+\textbf{Отклонить $H_0$} & Ошибка I рода ($\alpha$) & Корректно ($1 - \beta$ --- Мощность) \\ \bottomrule
+\end{tabular}
+\caption{Матрица ошибок проверки гипотез}
+\end{table}
+
+\begin{description}
+    \item[Ошибка I рода ($\alpha$):] Вероятность отклонить нулевую гипотезу, когда она верна (ложная тревога). Обычно фиксируется на уровне $\alpha = 0.05$.
+    \item[Ошибка II рода ($\beta$):] Вероятность НЕ отклонить нулевую гипотезу, когда она ложна (упущенная выгода). Обычно фиксируется на уровне $\beta = 0.20$.
+    \item[Статистическая мощность ($1 - \beta$):] Вероятность обнаружить реальный эффект, если он существует. Стандартное требование --- не менее 80\%.
+    \item[MDE (Minimum Detectable Effect):] Минимальный эффект изменения метрики, который мы хотим гарантированно зафиксировать в эксперименте.
+\end{description}
+
+Формула для расчета объема выборки $N$ (для каждой группы в тесте на равенство средних):
+\begin{equation}
+    N \approx \frac{2 \sigma^2 \cdot (Z_{1-\alpha/2} + Z_{1-\beta})^2}{\text{MDE}^2}
+\end{equation}
+где $\sigma^2$ --- дисперсия целевой метрики, $Z$ --- квантили нормального распределения.
+
+\commentary{Вывод для собеседований: размер выборки прямо пропорционален дисперсии метрики ($\sigma^2$) и обратно пропорционален квадрату MDE. Чтобы сократить время теста (уменьшить N), используют методы снижения дисперсии: CUPED (Controlled-experiment Using Pre-Experiment Data), стратификацию или отсечение выбросов.}
+
+\subsubsection{Проблема множественного тестирования (Multiple Testing)}
+
+При одновременной проверке нескольких гипотез (например, сравнение 1 контроля и 5 тестовых групп или анализ 10 метрик одновременно) резко возрастает вероятность получить хотя бы один ложноположительный результат просто за счет случайного шума.
+
+Если проверяется $k$ независимых гипотез на уровне значимости $\alpha$, то групповая вероятность совершить хотя бы одну ошибку I рода (FWER --- Family-Wise Error Rate) равна:
+\begin{equation}
+    \text{FWER} = 1 - (1 - \alpha)^k
+\end{equation}
+Для $k = 10$ и $\alpha = 0.05$: $\text{FWER} = 1 - 0.95^{10} \approx 40\%$ (вместо целевых 5\%!).
+
+\textbf{Методы борьбы с множественным сравнением:}
+\begin{enumerate}
+    \item \textbf{Поправка Бонферрони (Bonferroni correction):}
+    Делим целевой уровень $\alpha$ на количество сравнений $k$:
+    \begin{equation}
+        \alpha_{new} = \frac{\alpha}{k}
+    \end{equation}
+    \begin{itemize}
+        \item \textit{Плюсы:} Предельная простота применения.
+        \item \textit{Минусы:} Слишком консервативный метод (сильно занижает мощность, повышая вероятность ошибки II рода), особенно при сильной корреляции между метриками.
+    \end{itemize}
+    
+    \item \textbf{Метод Бенджамини-Хохберга (FDR --- False Discovery Rate):}
+    Контролирует не FWER, а долю ложных отклонений среди всех отклоненных гипотез. Менее консервативен и сохраняет гораздо больше мощности.
+    \begin{enumerate}
+        \item Полученные $p\text{-values}$ сортируются по возрастанию: $p_{(1)} \le p_{(2)} \le \dots \le p_{(k)}$.
+        \item Находим наибольшее $i$, для которого выполняется условие:
+        \begin{equation}
+            p_{(i)} \le \frac{i}{k} \cdot Q
+        \end{equation}
+        где $Q$ --- целевой уровень FDR (например, 0.05).
+        \item Отклоняем все гипотезы от $1$ до $i$.
+    \end{enumerate}
+\end{enumerate}
+
+\begin{lstlisting}[language=Python, caption={Коррекция множественного тестирования}]
+from statsmodels.stats.multitest import multipletests
+
+p_values = [0.005, 0.012, 0.03, 0.045, 0.12]
+
+# Bonferroni correction
+reject_bonf, corrected_p_bonf, _, _ = multipletests(p_values, alpha=0.05, method='bonferroni')
+
+# FDR control via Benjamini-Hochberg procedure (FDR = 5%)
+reject_fdr, corrected_p_fdr, _, _ = multipletests(p_values, alpha=0.05, method='fdr_bh')
+\end{lstlisting}
+
+\newpage
+
+\subsection{Итоговая шпаргалка: Выбор статистического критерия}
+
+Ниже представлена сводная таблица, которая поможет вам быстро сориентироваться на собеседовании при выборе правильного статистического критерия.
+
+\begin{longtable}{p{0.25\textwidth}p{0.35\textwidth}p{0.35\textwidth}}
+\toprule
+\textbf{Тип данных} & \textbf{Параметрический критерий (нормальность, $N > 30$)} & \textbf{Непараметрический критерий (любое распределение, выбросы)} \\ \midrule
+\textbf{2 независимые группы} (метрический признак, e.g., средний чек) & \textbf{t-критерий Стьюдента} (если дисперсии равны) или \textbf{t-критерий Уэлча} (\texttt{equal\_var=False}) & \textbf{Критерий Манна-Уитни} (проверяет стохастическое доминирование) \\ \midrule
+\textbf{2 зависимые группы} (метрический признак, e.g., «до» и «после») & \textbf{Парный t-критерий Стьюдента} & \textbf{Критерий знаковых рангов Уилкоксона} \\ \midrule
+\textbf{3+ независимые группы} (метрический признак) & \textbf{Однофакторный ANOVA} (F-test) & \textbf{Критерий Краскела-Уоллиса} \\ \midrule
+\textbf{Категориальные данные} (качественный признак, e.g., конверсия) & \textbf{Z-критерий долей (proportions z-test)} (при больших выборках) & \textbf{Критерий хи-квадрат ($\chi^2$)} (ожидаемые частоты $\ge 5$) или \textbf{Точный критерий Фишера} (для малых выборок) \\ \midrule
+\textbf{Проверка формы распределения} & \textbf{Критерий Шапиро-Уилка} (нормальность, $N < 5000$) & \textbf{Критерий Колмогорова-Смирнова} (сопоставление непрерывных функций ECDF) \\ \bottomrule
+\caption{Матрица принятия решений по статистическим критериям}
+\end{longtable}
+
+\antigravity{На собеседованиях по A/B-тестированию всегда начинайте с формулировки гипотез ($H_0$ и $H_a$), затем обязательно озвучивайте предпосылки (assumptions) выбранного теста и то, как вы будете их проверять (например, тест Ливеня для дисперсий, Q-Q Plot для нормальности). Это сразу выделит вас как сильного инженера, понимающего математику за методами, а не просто вызывающего готовые функции библиотек.}
+
+\end{document}
